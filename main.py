@@ -124,6 +124,7 @@ class QuestionApp(App[str]):
     
     Horizontal {
         width: 100%;
+        height: 3;
         content-align: center middle;
         padding: 0 6;
     }
@@ -138,9 +139,9 @@ class QuestionApp(App[str]):
     register = [False for i in range(numbits)]
     target = [False for i in range(numbits)]
 
-    reg_widgets = [DigitalIndicator(b, id=f'reg{i}') for i, b in enumerate(register)]
-    tar_widgets = [DigitalIndicator(b, id=f'tar{i}') for i, b in enumerate(target)]
-    cmd_widgets = [DigitalIndicator(False, id=f'cmd{i}') for i, b in enumerate(target)]
+    reg_widgets = [Checkbox(b, id=f'reg{i}') for i, b in enumerate(register)]
+    tar_widgets = [Checkbox(b, id=f'tar{i}') for i, b in enumerate(target)]
+    cmd_widgets = [Checkbox(False, id=f'cmd{i}') for i, b in enumerate(target)]
 
     key_log = 'key.log'
     execute_log = 'execute.log'
