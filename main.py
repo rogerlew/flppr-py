@@ -124,8 +124,8 @@ class QuestionApp(App[str]):
     
     Horizontal {
         width: 100%;
-        height: 3;
         content-align: center middle;
+        height: 3;
         padding: 0 6;
     }
     
@@ -146,15 +146,16 @@ class QuestionApp(App[str]):
     key_log = 'key.log'
     execute_log = 'execute.log'
     reset_log = 'reset.log'
+    score_log = 'score.log'
 
     status = StaticFooter()
-    score = 0
+    _score = 0
 
     trial_time = 600
     t0 = None
     update_timer = None
 
-    target_timeout_function = lambda self: 5
+    target_timeout_function = lambda self: 20
     target_timeout = None
     target_t0 = None
     target_time_widget = Static('', classes='label')
@@ -162,6 +163,16 @@ class QuestionApp(App[str]):
     reward = 1
     commission_penalty = 1
     omission_penalty = 1
+
+    @property
+    def score(self):
+        return self._score
+
+    @score.setter
+    def score(self, value):
+        self._score = value
+        with open(self.score_log, 'a') as fp:
+            fp.write(f'{self.k},{time.time_ns()},{self._score}\n')
 
     def reset_target(self):
         self.k += 1
@@ -279,7 +290,20 @@ class QuestionApp(App[str]):
 
 
 if __name__ == "__main__":
+    import argparse
+
+    parser = argparse.ArgumentParser(description='flppr')
+    parser.add_argument('filename')
+    args = parser.parse_args()
+    filename = args.filename
+
 
     app = QuestionApp()
+    app.key_log = f'{filename}_{app.key_log}'
+    app.execute_log = f'{filename}_{app.execute_log}'
+    app.reset_log = f'{filename}_{app.reset_log}'
+    app.score_log = f'{filename}_{app.score_log}'
+
     reply = app.run()
     print(reply)
+
